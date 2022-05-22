@@ -2,6 +2,7 @@ import { Button, Item, List, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 
 interface Props {
+  editMode: boolean;
   activities: Activity[];
   viewActivityDetails: (id: string) => void;
 }
@@ -25,6 +26,7 @@ export default function ActivityList(props: Props) {
                   </Item.Description>
                   <Item.Extra>
                     <Button
+                      disabled={props.editMode}
                       onClick={() => props.viewActivityDetails(activity.id)}
                       floated="right"
                       content="View"

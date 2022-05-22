@@ -7,9 +7,8 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [viewingActivity, setSelectedActivity] = useState<
-    Activity | undefined
-  >(undefined);
+  const [viewingActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
+  const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
     axios
@@ -27,15 +26,27 @@ function App() {
     setSelectedActivity(undefined);
   }
 
+  function editActivity(id? : string) {
+    id ? handleSelectActivity(id) : handleUnselectActivity();
+    setEditMode(true);
+  }
+
+  function finishEditActivity() {
+    setEditMode(false);
+  }
+
   return (
     <>
-      <NavBar />
+      <NavBar createActivity={editActivity} />
       <Container style={{ marginTop: "7em" }}>
         <ActivityDashboard
           activities={activities}
           viewingActivity={viewingActivity}
           viewActivityDetails={handleSelectActivity}
           cancelViewActivityDetails={handleUnselectActivity}
+          editMode={editMode}
+          editActivity={editActivity}
+          finishEditActivity={finishEditActivity}
         />
       </Container>
     </>

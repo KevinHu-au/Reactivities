@@ -10,6 +10,9 @@ interface Props {
   viewingActivity: Activity | undefined;
   viewActivityDetails: (id: string) => void;
   cancelViewActivityDetails: () => void;
+  editMode: boolean;
+  editActivity: (id?: string) => void;
+  finishEditActivity: () => void;
 }
 
 export default function ActivityDashboard(props: Props) {
@@ -17,18 +20,25 @@ export default function ActivityDashboard(props: Props) {
     <Grid>
       <Grid.Column width="10">
         <ActivityList
+          editMode={props.editMode}
           activities={props.activities}
           viewActivityDetails={props.viewActivityDetails}
         />
       </Grid.Column>
       <Grid.Column width="6">
-        {props.viewingActivity && (
+        {props.viewingActivity && !props.editMode && (
           <ActivityDetails
             activity={props.viewingActivity}
             cancelViewActivityDetails={props.cancelViewActivityDetails}
+            editActivity={props.editActivity}
           />
         )}
-        <ActivityForm />
+        {props.editMode && (
+          <ActivityForm
+            editActivity={props.viewingActivity}
+            finishEditActivity={props.finishEditActivity}
+          />
+        )}
       </Grid.Column>
     </Grid>
   );
