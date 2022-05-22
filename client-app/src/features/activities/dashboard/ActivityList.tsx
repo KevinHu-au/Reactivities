@@ -1,4 +1,4 @@
-import { Button, Item, List, Segment } from "semantic-ui-react";
+import { Button, Item, Label, List, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 
 interface Props {
@@ -32,6 +32,7 @@ export default function ActivityList(props: Props) {
                       content="View"
                       color="blue"
                     />
+                    <Label basic content={activity.category} />
                   </Item.Extra>
                 </Item.Content>
               </Item>
