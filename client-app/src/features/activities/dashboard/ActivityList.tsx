@@ -5,6 +5,7 @@ interface Props {
   editMode: boolean;
   activities: Activity[];
   viewActivityDetails: (id: string) => void;
+  deleteActivity: (id: string) => void;
 }
 
 export default function ActivityList(props: Props) {
@@ -31,6 +32,12 @@ export default function ActivityList(props: Props) {
                       floated="right"
                       content="View"
                       color="blue"
+                    />
+                    <Button
+                      onClick={() => props.deleteActivity(activity.id)}
+                      floated="right"
+                      negative
+                      content="Delete"
                     />
                     <Label basic content={activity.category} />
                   </Item.Extra>

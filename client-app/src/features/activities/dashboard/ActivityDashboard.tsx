@@ -14,6 +14,7 @@ interface Props {
   editActivity: (id?: string) => void;
   finishEditActivity: () => void;
   savingActivity: (activity: Activity) => void;
+  deleteActivity: (id: string) => void;
 }
 
 export default function ActivityDashboard(props: Props) {
@@ -24,6 +25,7 @@ export default function ActivityDashboard(props: Props) {
           editMode={props.editMode}
           activities={props.activities}
           viewActivityDetails={props.viewActivityDetails}
+          deleteActivity={props.deleteActivity}
         />
       </Grid.Column>
       <Grid.Column width="6">

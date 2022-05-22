@@ -49,6 +49,10 @@ function App() {
       : setActivities([...activities, {...activity, id: uuid()}]);
   }
 
+  function handleDeleteActivity(id: string) {
+    setActivities([...activities.filter(x => x.id !== id)]);
+  }
+
   return (
     <>
       <NavBar createActivity={editActivity} />
@@ -62,6 +66,7 @@ function App() {
           editActivity={editActivity}
           finishEditActivity={finishEditActivity}
           savingActivity={handleSavingActivity}
+          deleteActivity={handleDeleteActivity}
         />
       </Container>
     </>
