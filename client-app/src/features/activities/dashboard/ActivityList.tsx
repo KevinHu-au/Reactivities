@@ -14,7 +14,7 @@ export default function ActivityList({ activities }: Props) {
               <Item.Group>
                 <Item key={activity.id}>
                   <Item.Content>
-                    <Item.Header as="a">{activity.title}</Item.Header>
+                    <Item.Header as='a'>{activity.title}</Item.Header>
                     <Item.Meta>{activity.date}</Item.Meta>
                     <Item.Description>
                       <div>{activity.description}</div>
@@ -23,7 +23,7 @@ export default function ActivityList({ activities }: Props) {
                       </div>
                     </Item.Description>
                     <Item.Extra>
-                      <Button floated="right" content="View" color="blue" />
+                      <Button floated='right' content='View' color='blue' />
                     </Item.Extra>
                   </Item.Content>
                 </Item>
