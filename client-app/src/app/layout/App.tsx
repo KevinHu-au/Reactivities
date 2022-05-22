@@ -46,7 +46,7 @@ function App() {
           ...activities.filter((x) => x.id !== activity.id),
           activity,
         ])
-      : setActivities([...activities, activity]);
+      : setActivities([...activities, {...activity, id: uuid()}]);
   }
 
   return (
