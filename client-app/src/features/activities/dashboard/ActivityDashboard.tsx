@@ -15,6 +15,7 @@ interface Props {
   finishEditActivity: () => void;
   savingActivity: (activity: Activity) => void;
   deleteActivity: (id: string) => void;
+  submitting: boolean;
 }
 
 export default function ActivityDashboard(props: Props) {
@@ -41,6 +42,7 @@ export default function ActivityDashboard(props: Props) {
             editActivity={props.viewingActivity}
             finishEditActivity={props.finishEditActivity}
             submitActivity={props.savingActivity}
+            submitting={props.submitting}
           />
         )}
       </Grid.Column>
