@@ -13,6 +13,7 @@ interface Props {
   editMode: boolean;
   editActivity: (id?: string) => void;
   finishEditActivity: () => void;
+  savingActivity: (activity: Activity) => void;
 }
 
 export default function ActivityDashboard(props: Props) {
@@ -37,6 +38,7 @@ export default function ActivityDashboard(props: Props) {
           <ActivityForm
             editActivity={props.viewingActivity}
             finishEditActivity={props.finishEditActivity}
+            submitActivity={props.savingActivity}
           />
         )}
       </Grid.Column>

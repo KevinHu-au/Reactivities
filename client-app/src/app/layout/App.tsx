@@ -7,7 +7,9 @@ import ActivityDashboard from "../../features/activities/dashboard/ActivityDashb
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([]);
-  const [viewingActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
+  const [viewingActivity, setSelectedActivity] = useState<Activity | undefined>(
+    undefined
+  );
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
@@ -26,13 +28,24 @@ function App() {
     setSelectedActivity(undefined);
   }
 
-  function editActivity(id? : string) {
+  function editActivity(id?: string) {
     id ? handleSelectActivity(id) : handleUnselectActivity();
     setEditMode(true);
   }
 
   function finishEditActivity() {
     setEditMode(false);
+  }
+
+  function handleSavingActivity(activity: Activity) {
+    setEditMode(false);
+    setSelectedActivity(activity);
+    activity.id
+      ? setActivities([
+          ...activities.filter((x) => x.id !== activity.id),
+          activity,
+        ])
+      : setActivities([...activities, activity]);
   }
 
   return (
@@ -47,6 +60,7 @@ function App() {
           editMode={editMode}
           editActivity={editActivity}
           finishEditActivity={finishEditActivity}
+          savingActivity={handleSavingActivity}
         />
       </Container>
     </>
