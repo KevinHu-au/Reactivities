@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Item, Label, List, Segment } from "semantic-ui-react";
 import { Activity } from "../../../app/models/activity";
 
@@ -6,9 +7,17 @@ interface Props {
   activities: Activity[];
   viewActivityDetails: (id: string) => void;
   deleteActivity: (id: string) => void;
+  submitting: boolean;
 }
 
 export default function ActivityList(props: Props) {
+  const [deletingId, setDeletingId] = useState("");
+
+  function handleDeleteActivity(id: string) {
+    setDeletingId(id);
+    props.deleteActivity(id);
+  }
+
   return (
     <List>
       {props.activities.map((activity) => (
@@ -34,7 +43,8 @@ export default function ActivityList(props: Props) {
                       color="blue"
                     />
                     <Button
-                      onClick={() => props.deleteActivity(activity.id)}
+                      loading={props.submitting && deletingId === activity.id}
+                      onClick={() => handleDeleteActivity(activity.id)}
                       floated="right"
                       negative
                       content="Delete"

@@ -27,6 +27,7 @@ export default function ActivityDashboard(props: Props) {
           activities={props.activities}
           viewActivityDetails={props.viewActivityDetails}
           deleteActivity={props.deleteActivity}
+          submitting={props.submitting}
         />
       </Grid.Column>
       <Grid.Column width="6">
