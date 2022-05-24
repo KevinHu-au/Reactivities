@@ -1,16 +1,13 @@
+import { observer } from "mobx-react-lite";
 import React, { ChangeEvent, useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { useStore } from "../../../app/stores/store";
 
-interface Props{
-    editActivity : Activity | undefined;
-    finishEditActivity: () => void;
-    submitActivity: (activity: Activity) => void;
-    submitting: boolean;
-}
+export default  observer(function ActivityForm() {
+    const {activityStore} = useStore();
+    const {viewingActivity, submitting, createActivity, updateActivity, finishEditActivity} = activityStore;
 
-export default function ActivityForm(props: Props) {
-    const initState = props.editActivity ?? {
+    const initState = viewingActivity ?? {
         id:'',
         title:'',
         category:'',
@@ -23,7 +20,7 @@ export default function ActivityForm(props: Props) {
     const [activity, setActivity] = useState(initState);
 
     function handleSubmit(){
-        props.submitActivity(activity);
+        activity.id ? updateActivity(activity) : createActivity(activity);
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -40,9 +37,9 @@ export default function ActivityForm(props: Props) {
                 <Form.Input type='date' placeholder='Date' value={activity.date} name='date' onChange={handleInputChange}/>
                 <Form.Input placeholder='City' value={activity.city} name='city' onChange={handleInputChange}/>
                 <Form.Input placeholder='Venue' value={activity.venue} name='venue' onChange={handleInputChange}/>
-                <Button loading={props.submitting} floated='left' positive type='submit' content='Submit'/>
-                <Button onClick={props.finishEditActivity} floated='right' type='button' content='Cancel'/>
+                <Button loading={submitting} floated='left' positive type='submit' content='Submit'/>
+                <Button onClick={finishEditActivity} floated='right' type='button' content='Cancel'/>
             </Form>
         </Segment>
     )
-}
+})

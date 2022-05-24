@@ -1,26 +1,22 @@
+import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { Button, Item, Label, List, Segment } from "semantic-ui-react";
-import { Activity } from "../../../app/models/activity";
+import { useStore } from "../../../app/stores/store";
 
-interface Props {
-  editMode: boolean;
-  activities: Activity[];
-  viewActivityDetails: (id: string) => void;
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
-
-export default function ActivityList(props: Props) {
+export default observer(function ActivityList() {
+  const { activityStore } = useStore();
+  const { activities, editMode, submitting, handleSelectActivity } =
+    activityStore;
   const [deletingId, setDeletingId] = useState("");
 
   function handleDeleteActivity(id: string) {
     setDeletingId(id);
-    props.deleteActivity(id);
+    activityStore.deleteActivity(id);
   }
 
   return (
     <List>
-      {props.activities.map((activity) => (
+      {activities.map((activity) => (
         <List.Item key={activity.id}>
           <Segment>
             <Item.Group>
@@ -36,14 +32,14 @@ export default function ActivityList(props: Props) {
                   </Item.Description>
                   <Item.Extra>
                     <Button
-                      disabled={props.editMode}
-                      onClick={() => props.viewActivityDetails(activity.id)}
+                      disabled={editMode}
+                      onClick={() => handleSelectActivity(activity.id)}
                       floated="right"
                       content="View"
                       color="blue"
                     />
                     <Button
-                      loading={props.submitting && deletingId === activity.id}
+                      loading={submitting && deletingId === activity.id}
                       onClick={() => handleDeleteActivity(activity.id)}
                       floated="right"
                       negative
@@ -80,4 +76,4 @@ export default function ActivityList(props: Props) {
     //     </Item.Group>
     //   </Segment>
   );
-}
+});
