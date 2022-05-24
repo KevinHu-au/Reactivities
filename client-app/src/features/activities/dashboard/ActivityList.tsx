@@ -5,8 +5,12 @@ import { useStore } from "../../../app/stores/store";
 
 export default observer(function ActivityList() {
   const { activityStore } = useStore();
-  const { activities, editMode, submitting, handleSelectActivity } =
-    activityStore;
+  const {
+    activitiesByDate: activities,
+    editMode,
+    saving: deleting,
+    handleSelectActivity,
+  } = activityStore;
   const [deletingId, setDeletingId] = useState("");
 
   function handleDeleteActivity(id: string) {
@@ -39,7 +43,7 @@ export default observer(function ActivityList() {
                       color="blue"
                     />
                     <Button
-                      loading={submitting && deletingId === activity.id}
+                      loading={deleting && deletingId === activity.id}
                       onClick={() => handleDeleteActivity(activity.id)}
                       floated="right"
                       negative

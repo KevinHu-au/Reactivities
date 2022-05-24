@@ -3,14 +3,20 @@ import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import { v4 as uuid } from "uuid";
 export default class ActivityStore {
-  activities: Activity[] = [];
+  activityRegistry = new Map<string, Activity>();
   viewingActivity: Activity | undefined = undefined;
   loadingInitial = true;
   editMode = false;
-  submitting = false;
+  saving = false;
 
   constructor() {
     makeAutoObservable(this);
+  }
+
+  get activitiesByDate() {
+    return Array.from(this.activityRegistry.values()).sort(
+      (a, b) => Date.parse(a.date) - Date.parse(b.date)
+    );
   }
 
   loadActivities = async () => {
@@ -18,7 +24,7 @@ export default class ActivityStore {
       const activities = await agent.Activities.list();
       activities.forEach((activity) => {
         activity.date = activity.date.split("T")[0];
-        this.activities.push(activity);
+        this.activityRegistry.set(activity.id, activity);
       });
       this.setLoadingInitial(false);
     } catch (error) {
@@ -32,7 +38,7 @@ export default class ActivityStore {
   };
 
   handleSelectActivity = (id: string) => {
-    this.viewingActivity = this.activities.find((a) => a.id === id);
+    this.viewingActivity = this.activityRegistry.get(id);
   };
 
   handleUnselectActivity = () => {
@@ -50,57 +56,54 @@ export default class ActivityStore {
   };
 
   createActivity = async (activity: Activity) => {
-    this.submitting = true;
+    this.saving = true;
     activity.id = uuid();
     try {
       await agent.Activities.create(activity);
       runInAction(() => {
-        this.activities.push(activity);
+        this.activityRegistry.set(activity.id, activity);
         this.editMode = false;
         this.viewingActivity = activity;
-        this.submitting = false;
+        this.saving = false;
       });
     } catch (error) {
       console.log(error);
       runInAction(() => {
-        this.submitting = false;
+        this.saving = false;
       });
     }
   };
 
   updateActivity = async (activity: Activity) => {
-    this.submitting = true;
+    this.saving = true;
     try {
       await agent.Activities.update(activity);
       runInAction(() => {
-        this.activities = [
-          ...this.activities.filter((a) => a.id !== activity.id),
-          activity,
-        ];
+        this.activityRegistry.set(activity.id, activity);
         this.editMode = false;
         this.viewingActivity = activity;
-        this.submitting = false;
+        this.saving = false;
       });
     } catch (error) {
       console.log(error);
       runInAction(() => {
-        this.submitting = false;
+        this.saving = false;
       });
     }
   };
 
   deleteActivity = async (id: string) => {
-    this.submitting = true;
+    this.saving = true;
     try {
       await agent.Activities.delete(id);
-      this.activities = [...this.activities.filter((a) => a.id !== id)];
+      this.activityRegistry.delete(id);
       runInAction(() => {
-        this.submitting = false;
+        this.saving = false;
       });
     } catch (error) {
       console.log(error);
       runInAction(() => {
-        this.submitting = false;
+        this.saving = false;
       });
     }
   };
