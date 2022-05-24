@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 import ActivityDetails from "../details/ActivityDetails";
@@ -9,6 +9,10 @@ import ActivityList from "./ActivityList";
 export default observer(function ActivityDashboard() {
   const { activityStore } = useStore();
   const { viewingActivity, editMode } = activityStore;
+
+  useEffect(() => {
+    activityStore.loadActivities();
+  }, [activityStore]);
 
   return (
     <Grid>
