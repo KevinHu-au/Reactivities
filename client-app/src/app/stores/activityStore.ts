@@ -4,7 +4,7 @@ import { Activity } from "../models/activity";
 import { v4 as uuid } from "uuid";
 export default class ActivityStore {
   activityRegistry = new Map<string, Activity>();
-  viewingActivity: Activity | undefined = undefined;
+  selectedActivity: Activity | undefined = undefined;
   loadingInitial = true;
   editMode = false;
   saving = false;
@@ -20,6 +20,7 @@ export default class ActivityStore {
   }
 
   loadActivities = async () => {
+    this.setLoadingInitial(true);
     try {
       const activities = await agent.Activities.list();
       runInAction(() => {
@@ -37,16 +38,39 @@ export default class ActivityStore {
     }
   };
 
+  loadActivity = async (id: string) => {
+    let activity = this.getActivityFromRegistry(id);
+
+    if (activity) {
+      this.selectedActivity = activity;
+      return activity;
+    } else {
+      this.loadingInitial = true;
+      try {
+        activity = await agent.Activities.details(id);
+        this.setActivityToRegistry(activity);
+        runInAction(() => {
+          this.selectedActivity = activity;
+        });
+        this.setLoadingInitial(false);
+        return activity;
+      } catch (error) {
+        console.log(error);
+        this.setLoadingInitial(false);
+      }
+    }
+  };
+
   setLoadingInitial = (state: boolean) => {
     this.loadingInitial = state;
   };
 
   handleSelectActivity = (id: string) => {
-    this.viewingActivity = this.activityRegistry.get(id);
+    this.selectedActivity = this.activityRegistry.get(id);
   };
 
   handleUnselectActivity = () => {
-    this.viewingActivity = undefined;
+    this.selectedActivity = undefined;
   };
 
   editActivity = (id?: string) => {
@@ -67,7 +91,7 @@ export default class ActivityStore {
       runInAction(() => {
         this.activityRegistry.set(activity.id, activity);
         this.editMode = false;
-        this.viewingActivity = activity;
+        this.selectedActivity = activity;
         this.saving = false;
       });
     } catch (error) {
@@ -85,7 +109,7 @@ export default class ActivityStore {
       runInAction(() => {
         this.activityRegistry.set(activity.id, activity);
         this.editMode = false;
-        this.viewingActivity = activity;
+        this.selectedActivity = activity;
         this.saving = false;
       });
     } catch (error) {
@@ -110,5 +134,14 @@ export default class ActivityStore {
         this.saving = false;
       });
     }
+  };
+
+  private getActivityFromRegistry = (id: string) => {
+    return this.activityRegistry.get(id);
+  };
+
+  private setActivityToRegistry = (activity: Activity) => {
+    activity.date = activity.date.split("T")[0];
+    this.activityRegistry.set(activity.id, activity);
   };
 }
