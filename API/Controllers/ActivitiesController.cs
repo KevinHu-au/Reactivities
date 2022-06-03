@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
