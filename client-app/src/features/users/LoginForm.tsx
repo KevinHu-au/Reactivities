@@ -32,7 +32,7 @@ export default observer(function LoginForm() {
 							/>
 						)}
 					/>
-					<Button positive content='Login' type='submit' fluid />
+					<Button loading={isSubmitting} positive content='Login' type='submit' fluid />
 				</Form>
 			)}
 		</Formik>
