@@ -11,7 +11,6 @@ export default observer(function ModalContainer() {
 			open={modalStore.model.open}
 			onClose={modalStore.closeModal}
 			closeOnDimmerClick={modalStore.model.closeOnDimmerClick}
-			close
 			size='mini'
 		>
 			<Modal.Content>{modalStore.model.body}</Modal.Content>
