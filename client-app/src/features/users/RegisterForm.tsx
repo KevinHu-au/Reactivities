@@ -5,6 +5,7 @@ import { Button, Header, Label } from 'semantic-ui-react';
 import MyTextInput from '../../app/common/form/MyTextInput';
 import { useStore } from '../../app/stores/store';
 import * as Yup from 'yup';
+import ValidationErrors from '../errors/ValidationErrors';
 
 export default observer(function RegisterForm() {
 	const { userStore } = useStore();
@@ -21,7 +22,7 @@ export default observer(function RegisterForm() {
 			onSubmit={(values, { setErrors }) =>
 				userStore
 					.register(values)
-					.catch((error) => setErrors({ error: 'Failed to sign you up!' }))
+					.catch((error) => setErrors({ error }))
 			}
 			validationSchema={Yup.object({
 				displayName: Yup.string().required(),
@@ -31,7 +32,7 @@ export default observer(function RegisterForm() {
 			})}
 		>
 			{({ handleSubmit, isSubmitting, errors, isValid, dirty }) => (
-				<Form className='ui form' onSubmit={handleSubmit} autoComplete='off' >
+				<Form className='ui form error' onSubmit={handleSubmit} autoComplete='off' >
 					<Header
 						as='h2'
 						color='teal'
@@ -45,12 +46,7 @@ export default observer(function RegisterForm() {
 					<ErrorMessage
 						name='error'
 						render={() => (
-							<Label
-								style={{ marginBottom: 10 }}
-								basic
-								color='red'
-								content={errors.error}
-							/>
+							<ValidationErrors errors={errors.error}/>
 						)}
 					/>
 					<Button
